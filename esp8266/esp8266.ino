@@ -1,5 +1,8 @@
-//Módulos Neo-7M(GPS) - bmp180(Barometro, Temperatura) - MPU6050 (Giroscópio, Temperatura)
-
+//Módulos Neo-7M(GPS) - bmp180(Barometro, Temperatura) - MPU6050 (Giroscópio, Temperatura) - SD card
+//neo suporta - Serial (obter valores - http://arduiniana.org/libraries/tinygpsplus/)
+//bmp suporta - SPI ou I2C
+//mpu suporta -
+//sd card suporta -
 #include <SoftwareSerial.h> //Biblioteca para simular entrada RX, TX em portas digitais para comunicação com módulo GPS
 #include <Wire.h> //Biblioteca para funcionamento do I2c para comunicação com os módulos de pressão e giroscópio
 #include <TinyGPS++.h> //Biblioteca para tradução facil dos dados do GPS
@@ -19,6 +22,10 @@ void setup()
 {
   Serial.begin(115200); //Inicializar Serial do Arduino
   serialGPS.begin(GPSBaud); //Inicializar Serial do GPS
+}
+
+void saveSD(){
+  
 }
   
 void loop()
