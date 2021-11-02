@@ -22,7 +22,7 @@ CREATE TABLE mpu (
     gyY FLOAT NOT NULL,
     gyZ FLOAT NOT NULL,
     temperatura FLOAT NOT NULL,
-    velocIDade FLOAT NOT NULL,
+    velocidade FLOAT NOT NULL,
     data DATETIME NOT NULL,
     PRIMARY KEY (ID)
 );
@@ -34,7 +34,7 @@ CREATE TABLE gps (
     latitude FLOAT NOT NULL,
     longitude FLOAT NOT NULL,
     altitude FLOAT NOT NULL,
-    velocIDade FLOAT NOT NULL,
+    velocidade FLOAT NOT NULL,
     data_gps DATETIME NOT NULL,
     data DATETIME NOT NULL,
     PRIMARY KEY (ID)
