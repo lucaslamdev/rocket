@@ -1,4 +1,3 @@
-
 //Módulos Neo-7M(GPS) - bmp180(Barometro, Temperatura) - MPU6050 (Giroscópio, Temperatura) - SD card
 //neo suporta - Serial (obter valores - http://arduiniana.org/libraries/tinygpsplus/)
 //bmp suporta - SPI ou I2C
@@ -10,7 +9,7 @@
 #include <Adafruit_MPU6050.h>  //Biblioteca para facilitamento do uso do giroscópio
 #include <Adafruit_Sensor.h>   //Biblioteca para facilitamento do uso do giroscópio
 #include <Adafruit_BMP085.h>   //Biblioteca para facilitamento do uso do Barometro
-#include <WiFi.h>              //Biblioteca para uso do WiFi
+#include <ESP8266WiFi.h> //Biblioteca para funcionar WIFI
 #include <ESP8266HTTPClient.h> //Biblioteca para uso do HTTP - GET, POST...
 
 //Constantes
@@ -22,12 +21,12 @@ static const int D1_SDA_Pin = 5, D2_SCL_Pin = 4; //I2C BMP e MPU
 static const uint32_t GPSBaud = 6900;
 
 //Config Wifi
-const String ssid = "SSID";
-const String senha = "SENHA";
+#define ssid "SSID"
+#define senha "SENHA"
 
 //API Config
-static const char *API_KEY = "SENHA";
-static const char *API_LINK = "LINK";
+const String API_KEY = "SENHA";
+#define API_LINK "http://lucasmello.ga/API/insert/"
 
 //Delay Envio (10 segundos)
 static const unsigned int tempoDeDelay = 10000;
@@ -55,11 +54,12 @@ void setup()
   //inicializar GPS
   while (serialGPS.available() > 0)
   {
-    gps.encode(serialGPS.read);
+    int c = serialGPS.read();
+    gps.encode(c);
   }
 
   //inicializar wifi
-  WiFi.begin((char*)ssid.c_str(), (char*)senha.c_str());
+  WiFi.begin(ssid, senha);
   Serial.println("Conectando WIFI");
   while (WiFi.status() != WL_CONNECTED)
   {
@@ -181,13 +181,13 @@ void loop()
   float velocidade_mpu = sqrt(pow(a.acceleration.x, 2) + pow(a.acceleration.y, 2) + pow(a.acceleration.z, 2));
 
   //GPS
-  int qtd_satelites = gps.satsinview();
+  int qtd_satelites = gps.satellites.value();
   float latitude = gps.location.lat();
   float longitude = gps.location.lng();
   float altitude_gps = gps.altitude.meters();
   //float velocidade_gps = gps.speed.kmph(); //kilometros por hora
   float velocidade_gps = gps.speed.mps(); //metros por segundo
-  String data_gps = gps.date.value();
+  unsigned int data_gps = gps.date.value();
 
   // Envia HTTP POST request a cada 10 segundos
   if ((millis() - ultimoTempo) > tempoDeDelay)
@@ -200,7 +200,7 @@ void loop()
       HTTPClient http;
 
       //Inicializar conexão com o servidor
-      http.begin(API_LINK);
+      http.begin(client, API_LINK);
 
       // Especificar content-type header
       http.addHeader("Content-Type", "application/x-www-form-urlencoded");
